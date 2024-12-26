@@ -1,0 +1,152 @@
+version: '3.8'
+
+services:
+    nats-server:
+        image: nats:latest
+        ports:
+            - 8222:8222
+
+    # databases
+    authentication-database:
+        container_name: authentication-database
+        image: postgres:16.2
+        restart: always
+        volumes:
+            - ./auth.ms/postgres:/var/lib/postgresql/data
+        ports:
+            - 5433:5432
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_DB: authdb
+
+    projects-database:
+        container_name: projects-database
+        image: postgres:16.2
+        restart: always
+        volumes:
+            - ./projects.ms/postgres:/var/lib/postgresql/data
+        ports:
+            - 5432:5432
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_DB: projectsdb
+
+    # micro-services
+    gateway:
+        depends_on:
+            - nats-server
+        container_name: gateway
+        restart: unless-stopped
+        build:
+            target: dev
+            context: ./gateway
+            dockerfile: Dockerfile
+        volumes:
+            - ./gateway/src:/usr/src/app/src
+        environment:
+            PORT: 3000
+            NATS_SERVERS: ${NATS_SERVERS}
+        ports:
+            - '3000:3000'
+        deploy:
+            resources:
+                limits:
+                    cpus: '1'
+                    memory: '512m'
+                reservations:
+                    cpus: '0.25'
+                    memory: '256m'
+
+    authentication:
+        depends_on:
+            - nats-server
+            - authentication-database
+        container_name: authentication
+        restart: unless-stopped
+        environment:
+            PORT: 3001
+            NATS_SERVERS: ${NATS_SERVERS}
+            JWT_SECRET: ${JWT_SECRET}
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_DB: authdb
+            PORT_DB: 5433
+            HOST_DB: authentication-database
+        build:
+            target: dev
+            context: ./auth.ms
+            dockerfile: Dockerfile
+        ports:
+            - '3001:3001'
+        volumes:
+            - ./auth.ms/src:/app/src
+        deploy:
+            resources:
+                limits:
+                    cpus: '1'
+                    memory: '512m'
+                reservations:
+                    cpus: '0.25'
+                    memory: '256m'
+
+    projects:
+            depends_on:
+                - nats-server
+                - projects-database
+            container_name: projects
+            restart: unless-stopped
+            environment:
+                PORT: 3002
+                NATS_SERVERS: ${NATS_SERVERS}               
+                POSTGRES_USER: postgres
+                POSTGRES_PASSWORD: postgres
+                POSTGRES_DB: projectsdb
+                PORT_DB: 5432
+                HOST_DB: projects-database
+            build:
+                target: dev
+                context: ./projects.ms
+                dockerfile: Dockerfile
+            ports:
+                - '3002:3002'
+            volumes:
+                - ./projects.ms/src:/app/src
+            deploy:
+                resources:
+                    limits:
+                        cpus: '1'
+                        memory: '512m'
+                    reservations:
+                        cpus: '0.25'
+                        memory: '256m'
+    interactions:
+            depends_on:
+                - nats-server
+            container_name: interactions
+            restart: unless-stopped
+            # environment:
+            #     PORT: 3002
+            #     NATS_SERVERS: ${NATS_SERVERS}               
+            #     POSTGRES_USER: postgres
+            #     POSTGRES_PASSWORD: postgres
+            #     POSTGRES_DB: projectsdb
+            #     PORT_DB: 5432
+            #     HOST_DB: projects-database
+            build:
+                target: dev
+                context: ./interactions.ms
+                dockerfile: Dockerfile
+            ports:
+                - '3003:3003'
+            volumes:
+                - ./projects.ms/src:/app/src
+            deploy:
+                resources:
+                    limits:
+                        cpus: '1'
+                        memory: '512m'
+                    reservations:
+                        cpus: '0.25'
+                        memory: '256m'
