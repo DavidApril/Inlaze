@@ -1,0 +1,18 @@
+[submodule "auth.ms"]
+	path = auth.ms
+	url = https://github.com/DavidApril/auth.ms.git
+[submodule "gateway"]
+	path = gateway
+	url = https://github.com/DavidApril/gateway.git
+[submodule "projects.ms"]
+	path = projects.ms
+	url = https://github.com/DavidApril/projects.ms.git
+[submodule "frontend"]
+	path = frontend
+	url = https://github.com/DavidApril/frontend.git
+[submodule "tasks.ms"]
+	path = tasks.ms
+	url = https://github.com/DavidApril/tasks.ms.git
+[submodule "interactions.ms"]
+	path = interactions.ms
+	url = https://github.com/DavidApril/interactions.ms.git
