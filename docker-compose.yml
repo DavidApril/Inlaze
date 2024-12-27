@@ -13,7 +13,7 @@ services:
         image: postgres:16.2
         restart: always
         volumes:
-            - ./auth.ms/postgres:/var/lib/postgresql/data
+            - ./authentication/postgres:/var/lib/postgresql/data
         ports:
             - 5433:5432
         environment:
@@ -26,7 +26,7 @@ services:
         image: postgres:16.2
         restart: always
         volumes:
-            - ./projects.ms/postgres:/var/lib/postgresql/data
+            - ./projects/postgres:/var/lib/postgresql/data
         ports:
             - 5432:5432
         environment:
@@ -85,12 +85,12 @@ services:
             HOST_DB: authentication-database
         build:
             target: dev
-            context: ./auth.ms
+            context: ./authentication
             dockerfile: Dockerfile
         ports:
             - '3001:3001'
         volumes:
-            - ./auth.ms/src:/app/src
+            - ./authentication/src:/app/src
         deploy:
             resources:
                 limits:
@@ -116,12 +116,12 @@ services:
             HOST_DB: projects-database
         build:
             target: dev
-            context: ./projects.ms
+            context: ./projects
             dockerfile: Dockerfile
         ports:
             - '3002:3002'
         volumes:
-            - ./projects.ms/src:/app/src
+            - ./projects/src:/app/src
         deploy:
             resources:
                 limits:
@@ -140,12 +140,12 @@ services:
             NATS_SERVERS: ${NATS_SERVERS}
         build:
             target: dev
-            context: ./interactions.ms
+            context: ./interactions
             dockerfile: Dockerfile
         ports:
             - '3003:3003'
         volumes:
-            - ./interactions.ms/src:/app/src
+            - ./interactions/src:/app/src
         deploy:
             resources:
                 limits:
