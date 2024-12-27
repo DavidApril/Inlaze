@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
     nats-server:
+        container_name: nats-server
         image: nats:latest
         ports:
             - 8222:8222
@@ -32,6 +33,14 @@ services:
             POSTGRES_USER: postgres
             POSTGRES_PASSWORD: postgres
             POSTGRES_DB: projectsdb
+
+    interactions-database:
+        container_name: interactions-database
+        image: mongo:8.0
+        environment:
+            - MONGODB_DATABASE="interfactions-database"
+        ports:
+            - 27017:27017
 
     # micro-services
     gateway:
@@ -126,14 +135,9 @@ services:
                 - nats-server
             container_name: interactions
             restart: unless-stopped
-            # environment:
-            #     PORT: 3002
-            #     NATS_SERVERS: ${NATS_SERVERS}               
-            #     POSTGRES_USER: postgres
-            #     POSTGRES_PASSWORD: postgres
-            #     POSTGRES_DB: projectsdb
-            #     PORT_DB: 5432
-            #     HOST_DB: projects-database
+            environment:
+                PORT: 3003
+                NATS_SERVERS: ${NATS_SERVERS}               
             build:
                 target: dev
                 context: ./interactions.ms
@@ -141,7 +145,7 @@ services:
             ports:
                 - '3003:3003'
             volumes:
-                - ./projects.ms/src:/app/src
+                - ./interactions.ms/src:/app/src
             deploy:
                 resources:
                     limits:
