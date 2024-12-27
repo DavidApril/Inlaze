@@ -1,6 +1,16 @@
-# Inlaze
+# Inlaze - Task management
 
-Full stack technical test development for Inlaze
+Full stack technical test development for Inlaze with Microservices
+
+## Features
+
+-   Microservices architecture
+-   Dockerized services
+-   Authentication
+-   Projects management
+-   Comments per resource
+
+
 
 ## Backend dev
 
