@@ -2,7 +2,7 @@
 
 Full stack technical test development for Inlaze
 
-## Development
+## Backend dev
 
 1. Clone the repository to your local machine
 
@@ -22,10 +22,34 @@ git submodule update --init --recursive
 git submodule update --remote
 ```
 
+4. copy `.env.template` and rename to `.env`
+
 5. builds and run Docker images for all services defined in the `docker-compose.yml` file and then starts the containers.
 
 ```
 docker compose up --build
+```
+
+## Frontend dev
+
+1. Enter the frontend folder with `cd ./frontend`
+
+2. copy `.env.template` and rename `.env`
+
+3. install dependencies
+
+```
+npm install
+```
+
+```
+yarn install
+```
+
+3. run application
+
+```
+npm run dev
 ```
 
 ### Add submodule
