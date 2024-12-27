@@ -4,13 +4,12 @@ Full stack technical test development for Inlaze with Microservices
 
 ## Features
 
--   Microservices architecture
--   Dockerized services
--   Authentication
--   Projects management
--   Comments per resource
-
-
+* Microservices architecture
+* Dockerized services
+* full Swagger endpoints documentation
+* Authentication
+* Projects management
+* Comments per resource
 
 ## Backend dev
 
@@ -33,7 +32,6 @@ git submodule update --remote
 ```
 
 4. copy `.env.template` and rename to `.env`
-
 5. builds and run Docker images for all services defined in the `docker-compose.yml` file and then starts the containers.
 
 ```
@@ -47,9 +45,7 @@ You can use the seed for authentication by making a request in:
 ## Frontend dev
 
 1. Enter the frontend folder with `cd ./frontend`
-
 2. copy `.env.template` and rename `.env`
-
 3. install dependencies
 
 ```
