@@ -30,6 +30,10 @@ git submodule update --remote
 docker compose up --build
 ```
 
+You can use the seed for authentication by making a request in:
+
+`http://localhost:3000/api/docs#/auth/AuthController_seed`
+
 ## Frontend dev
 
 1. Enter the frontend folder with `cd ./frontend`
